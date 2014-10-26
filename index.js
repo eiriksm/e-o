@@ -2,7 +2,7 @@ var spawn = require('child_process').spawn;
 var util = require('util');
 var events = require('events');
 var uuid = require('node-uuid');
-var process = require('./lib/process');
+var processor = require('./lib/processor');
 
 function Eo(opts) {
   this.opts = opts;
@@ -13,6 +13,7 @@ function Eo(opts) {
   this.pageErrors = [];
   this.consoleMessages = [];
   this.resourceErrors = [];
+  this.logLevel = 'normal';
   events.EventEmitter.call(this);
   return this;
 }
@@ -32,31 +33,14 @@ Eo.prototype.start = function() {
     // process one at a time.
     String(data).split(_this.id).forEach(function(n) {
       var store = true;
-      if (process.statusCode(n, _this)) {
-        store = false;
-      }
-      if (process.renderTime(n, _this)) {
-        store = false;
-      }
-      if (process.pageError(n, _this)) {
-        store = false;
-      }
-      if (process.consoleMessage(n, _this)) {
-        store = false;
-      }
-      if (process.resourceError(n, _this)) {
-        store = false;
-      }
-      if (process.screenshot(n, _this)) {
-        store = false;
-      }
-      if (process.totalTime(n, _this)) {
-        store = false;
-      }
-      if (process.totalResources(n, _this)) {
-        store = false;
-      }
+      Object.keys(processor).forEach(function(m) {
+        // Run each processor on each line.
+        if (processor[m](n, _this)) {
+          store = false;
+        }
+      });
       if (store && n.length > 0) {
+        // Only store as log if it is something not related to processors.
         _this._debug(util.format('Data from client %s: %s', _this.id, n));
       }
     });
@@ -67,9 +51,12 @@ Eo.prototype.start = function() {
       if (isNaN(_this.statusCode)) {
         _this.statusCode = 0;
       }
-      _this.emit('error', _this.statusCode, _this.logs);
+      _this.emit('error', 'down', _this);
     }
-    _this._echo(util.format('%s (%s) ended with the status code %d', _this.id, url, Number(_this.statusCode)));
+    if (c !== 0) {
+      _this.emit('error', 'process', _this);
+    }
+    _this._debug(util.format('%s (%s) ended with the status code %d', _this.id, url, Number(_this.statusCode)));
     _this.emit('debug', _this.logs);
     _this.processTime = (Date.now() - time);
     _this.emit('end', _this);
@@ -77,7 +64,8 @@ Eo.prototype.start = function() {
   return this;
 };
 
-Eo.prototype._echo = function(str) {
+Eo.prototype._echo = function(type, str) {
+  console.log('[%s][%s] - %s', type, new Date().toString(),str);
 };
 
 Eo.prototype._debug = function(str) {
@@ -90,6 +78,9 @@ Eo.prototype._error = function(str) {
 
 Eo.prototype.log = function(type, str) {
   this.logs.push({type: type, message: str});
+  if (this.logLevel === 'debug') {
+    this._echo(type, str);
+  }
 };
 
 module.exports = Eo;
