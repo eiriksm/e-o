@@ -21,6 +21,9 @@
     "node-uuid": "^1.4.1"
   },
   "devDependencies": {
-    "es5-shim": "^4.0.3"
+    "es5-shim": "^4.0.3",
+    "istanbul": "^0.3.2",
+    "mocha": "^2.0.1",
+    "should": "^4.1.0"
   }
 }
