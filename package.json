@@ -1,0 +1,26 @@
+{
+  "name": "e-o",
+  "version": "1.0.0",
+  "description": "e-o ===",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eiriksm/e-o.git"
+  },
+  "author": "Eirik S. Morland <eirik@morland.no>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eiriksm/e-o/issues"
+  },
+  "homepage": "https://github.com/eiriksm/e-o",
+  "dependencies": {
+    "casperjs": "^1.1.0-beta3",
+    "node-uuid": "^1.4.1"
+  },
+  "devDependencies": {
+    "es5-shim": "^4.0.3"
+  }
+}
