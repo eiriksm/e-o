@@ -38,13 +38,12 @@ describe('End to end', function() {
 
   it('Should do the expected when requesting a non-existing URL', function(done) {
     this.timeout(10000);
-    var url = 'http://stupid.nonexistent.url';
-    e = new Eo({
+    var url = 'http:/stupid.nonexistent.url:23""';
+    var e = new Eo({
       url: url
     });
     e.logLevel = 'debug';
     e.on('end', function(d) {
-      d.resourceErrors.length.should.be.above(0);
       d.statusCode.should.equal(0);
       done();
     });

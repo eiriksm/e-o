@@ -56,6 +56,9 @@ Eo.prototype.start = function() {
     if (c !== 0) {
       _this.emit('error', 'process', _this);
     }
+    if (_this.opts.errors && _this.opts.errors.resourceError && _this.resourceErrors.length > 0) {
+      _this.emit('error', 'resource', _this);
+    }
     _this._debug(util.format('%s (%s) ended with the status code %d', _this.id, url, Number(_this.statusCode)));
     _this.emit('debug', _this.logs);
     _this.processTime = (Date.now() - time);
