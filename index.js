@@ -36,12 +36,11 @@ Eo.prototype.start = function() {
       Object.keys(processor).forEach(function(m) {
         // Run each processor on each line.
         if (processor[m](n, _this)) {
-          store = false;
         }
       });
       if (store && n.length > 0) {
         // Only store as log if it is something not related to processors.
-        _this._debug(util.format('Data from client %s: %s', _this.id, n));
+        _this._debug(n);
       }
     });
   });
@@ -59,7 +58,7 @@ Eo.prototype.start = function() {
     if (_this.opts.errors && _this.opts.errors.resourceError && _this.resourceErrors.length > 0) {
       _this.emit('error', 'resource', _this);
     }
-    _this._debug(util.format('%s (%s) ended with the status code %d', _this.id, url, Number(_this.statusCode)));
+    _this._debug(util.format('GET %s ended with the status code %d', url, Number(_this.statusCode)));
     _this.emit('debug', _this.logs);
     _this.processTime = (Date.now() - time);
     _this.emit('end', _this);
@@ -72,15 +71,15 @@ Eo.prototype._echo = function(type, str) {
 };
 
 Eo.prototype._debug = function(str) {
-  this.log('DEBUG', util.format('[%s] %s', new Date().toString(), str));
+  this.log('DEBUG', str);
 };
 
 Eo.prototype._error = function(str) {
-  this.log('ERROR', util.format('[%s] %s', new Date().toString(), str));
+  this.log('ERROR', str);
 };
 
 Eo.prototype.log = function(type, str) {
-  this.logs.push({type: type, message: str});
+  this.logs.push({type: type, message: str, timestamp: Date.now()});
   if (this.logLevel === 'debug') {
     this._echo(type, str);
   }
