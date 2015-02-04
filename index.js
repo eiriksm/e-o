@@ -22,12 +22,20 @@ util.inherits(Eo, events.EventEmitter);
 Eo.prototype.start = function() {
   var time = Date.now();
   var url = this.opts.url;
-  var p = spawn(__dirname + '/node_modules/.bin/casperjs',
-                [__dirname + '/lib/casper/site.js',
-                 url,
-                 this.id
-  ]);
+  var args = [
+  ];
+  if (this.opts.ignoreSsl) {
+    args.push('--ignore-ssl-errors=true');
+    args.push('--ssl-protocol=any');
+  }
+  if (this.opts.debug) {
+    args.push('--debug=true');
+  }
+  args.push(__dirname + '/lib/casper/site.js');
+  args.push(url);
+  args.push(this.id);
   var _this = this;
+  var p = spawn(__dirname + '/node_modules/.bin/casperjs', args);
   p.stdout.on('data', function(data) {
     // Sometimes these come in several lines at a time. Let's make sure we
     // process one at a time.
@@ -44,6 +52,9 @@ Eo.prototype.start = function() {
       }
     });
   });
+  p.stderr.on('data', function(data) {
+    _this._debug(data);
+  });
   p.on('close', function(c) {
     if (_this.statusCode !== 200) {
       // Normalize a little then.
@@ -59,6 +70,9 @@ Eo.prototype.start = function() {
       _this.emit('error', 'resource', _this);
     }
     _this._debug(util.format('GET %s ended with the status code %d', url, Number(_this.statusCode)));
+    args.forEach(function(n) {
+      _this._debug('Arg: ' + n);
+    });
     _this.emit('debug', _this.logs);
     _this.processTime = (Date.now() - time);
     _this.emit('end', _this);
