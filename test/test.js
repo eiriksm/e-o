@@ -1,3 +1,4 @@
+'use strict';
 var should = require('should');
 var Eo = require('..');
 
@@ -7,13 +8,14 @@ describe('Types and functions', function() {
   });
   it('Should have a couple of methods and properties', function() {
     var e = new Eo();
-    should(e.id).be.ok;
+    should(e.id).be.instanceOf(Object);
     e.start.should.be.instanceOf(Function);
   });
 });
 
 describe('End to end', function() {
   it('Should report the expected result on a test run', function(done) {
+    this.timeout(5000);
     var s = require('http').createServer(function(req, res) {
       res.end('<script>console.log("hello from web page");somethingStupid()</script>Hello world');
     });
