@@ -22,10 +22,10 @@
     "node-uuid": "^1.4.3"
   },
   "devDependencies": {
-    "es5-shim": "^4.1.1",
-    "eslint": "^0.21.1",
-    "istanbul": "^0.3.14",
+    "es5-shim": "^4.1.10",
+    "eslint": "^1.0.0",
+    "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
-    "should": "^6.0.3"
+    "should": "^7.0.2"
   }
 }
