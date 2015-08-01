@@ -25,7 +25,9 @@ describe('End to end', function() {
       url: 'http://localhost:8467'
     });
     e.on('end', function(d) {
+      /*eslint-disable quotes */
       d.consoleMessages[0].should.equal("hello from web page\n");
+      /*eslint-enable quotes */
       d.pageErrors.length.should.be.above(0);
       JSON.parse(d.pageErrors[0]).message.indexOf('somethingStupid').should.be.above(1);
       Number(d.statusCode).should.equal(200);
