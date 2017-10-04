@@ -35,7 +35,7 @@ Eo.prototype.start = function() {
   args.push(path.join(__dirname, '/lib/casper/site.js'));
   args.push(JSON.stringify({url: url, id: this.id, ignore: this.opts.ignore}));
   var eo = this;
-  var p = spawn(path.join(__dirname, '/node_modules/.bin/casperjs'), args);
+  var p = spawn('casperjs'), args);
   p.stdout.on('data', function(data) {
     // Sometimes these come in several lines at a time. Let's make sure we
     // process one at a time.
