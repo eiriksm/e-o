@@ -92,7 +92,7 @@ Eo.prototype.error = function(str) {
 };
 
 Eo.prototype.log = function(type, str) {
-  this.logs.push({type: type, message: str, timestamp: Date.now()});
+  this.logs.push({type: type, message: str.toString(), timestamp: Date.now()});
   if (this.logLevel === 'debug') {
     this.echo(type, str);
   }
