@@ -33,7 +33,7 @@ Eo.prototype.start = function() {
     args.push('--debug=true');
   }
   args.push(path.join(__dirname, '/lib/casper/site.js'));
-  args.push(JSON.stringify({url: url, id: this.id}));
+  args.push(JSON.stringify({url: url, id: this.id, ignore: this.opts.ignore}));
   var eo = this;
   var p = spawn(path.join(__dirname, '/node_modules/.bin/casperjs'), args);
   p.stdout.on('data', function(data) {
