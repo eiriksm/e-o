@@ -3,13 +3,13 @@ var spawn = require('child_process').spawn;
 var util = require('util');
 var path = require('path');
 var events = require('events');
-var uuid = require('node-uuid');
+const uuidv4 = require('uuid/v4');
 var processor = require('./lib/processor');
 
 function Eo(opts) {
   this.opts = opts;
   this.logs = [];
-  this.id = uuid.v4();
+  this.id = uuidv4();
   this.statusCode = 0;
   this.numbers = {};
   this.pageErrors = [];

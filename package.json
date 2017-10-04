@@ -19,8 +19,8 @@
   "homepage": "https://github.com/eiriksm/e-o",
   "dependencies": {
     "casperjs": "^1.1.0-beta3",
-    "node-uuid": "^1.4.3",
-    "phantomjs-prebuilt": "^2.1.15"
+    "phantomjs-prebuilt": "^2.1.15",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "es5-shim": "^4.1.10",
