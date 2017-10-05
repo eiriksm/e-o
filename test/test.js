@@ -15,7 +15,7 @@ describe('Types and functions', function() {
 
 describe('End to end', function() {
   it('Should report the expected result on a test run', function(done) {
-    this.timeout(5000);
+    this.timeout(15000);
     var s = require('http').createServer(function(req, res) {
       res.end('<script>console.log("hello from web page");somethingStupid()</script>Hello world');
     });
