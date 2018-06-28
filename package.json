@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "es5-shim": "^4.1.10",
-    "eslint": "^4.8.0",
+    "eslint": "^5.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^5.0.0",
     "should": "^13.1.0"
