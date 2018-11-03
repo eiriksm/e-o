@@ -19,10 +19,10 @@ describe('End to end', function() {
     var s = require('http').createServer(function(req, res) {
       res.end('<script>console.log("hello from web page");somethingStupid()</script>Hello world');
     });
-    s.listen(8467);
+    s.listen(9999);
 
     var e = new Eo({
-      url: 'http://localhost:8467'
+      url: 'http://localhost:9999'
     });
     e.on('error', function() {
     })
