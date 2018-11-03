@@ -1,10 +1,10 @@
 'use strict';
-var spawn = require('child_process').spawn;
 var util = require('util');
 var path = require('path');
 var events = require('events');
 const uuidv4 = require('uuid/v4');
 var processor = require('./lib/processor');
+var pup = require('./lib/puppeteer/site')
 
 function Eo(opts) {
   this.opts = opts;
@@ -24,22 +24,9 @@ util.inherits(Eo, events.EventEmitter);
 Eo.prototype.start = function() {
   var time = Date.now();
   var url = this.opts.url;
-  var args = [];
-  if (this.opts.ignoreSsl) {
-    args.push('--ignore-ssl-errors=true');
-    args.push('--ssl-protocol=any');
-  }
-  if (this.opts.debug) {
-    args.push('--debug=true');
-  }
-  args.push(path.join(__dirname, '/lib/casper/site.js'));
-  args.push(JSON.stringify({url: url, id: this.id, ignore: this.opts.ignore}));
   var eo = this;
-  var p = spawn('casperjs', args);
-  p.stdout.on('data', function(data) {
-    // Sometimes these come in several lines at a time. Let's make sure we
-    // process one at a time.
-    String(data).split(eo.id).forEach(function(n) {
+  pup({url: url, id: this.id, ignore: this.opts.ignore, auth: this.opts.auth}, function(err, data) {
+    data.forEach(function(n) {
       var store = true;
       Object.keys(processor).forEach(function(m) {
         // Run each processor on each line.
@@ -49,12 +36,7 @@ Eo.prototype.start = function() {
         // Only store as log if it is something not related to processors.
         eo.debug(n);
       }
-    });
-  });
-  p.stderr.on('data', function(data) {
-    eo.debug(data);
-  });
-  p.on('close', function(c) {
+    })
     if (eo.statusCode !== 200) {
       // Normalize a little then.
       if (isNaN(eo.statusCode)) {
@@ -62,16 +44,10 @@ Eo.prototype.start = function() {
       }
       eo.emit('error', 'down', eo);
     }
-    if (c !== 0) {
-      eo.emit('error', 'process', eo);
-    }
     if (eo.opts.errors && eo.opts.errors.resourceError && eo.resourceErrors.length > 0) {
       eo.emit('error', 'resource', eo);
     }
     eo.debug(util.format('GET %s ended with the status code %d', url, Number(eo.statusCode)));
-    args.forEach(function(n) {
-      eo.debug('Arg: ' + n);
-    });
     eo.emit('debug', eo.logs);
     eo.processTime = (Date.now() - time);
     eo.emit('end', eo);
