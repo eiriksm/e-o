@@ -26,6 +26,14 @@ Eo.prototype.start = function() {
   var url = this.opts.url;
   var eo = this;
   pup({url: url, id: this.id, ignore: this.opts.ignore, auth: this.opts.auth}, function(err, data) {
+    if (err) {
+      eo.emit('error', 'process', eo)
+      eo.emit('error', 'down', eo);
+      eo.statusCode = 0;
+    }
+    if (!data) {
+      data = []
+    }
     data.forEach(function(n) {
       var store = true;
       Object.keys(processor).forEach(function(m) {
