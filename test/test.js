@@ -22,7 +22,7 @@ describe('End to end', function() {
     s.listen(9999);
 
     var e = new Eo({
-      url: 'http://localhost:9999'
+      url: 'http://172.17.0.1:9999'
     });
     e.on('error', function() {
     })
