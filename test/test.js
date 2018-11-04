@@ -19,23 +19,22 @@ describe('End to end', function() {
     var s = require('http').createServer(function(req, res) {
       res.end('<script>console.log("hello from web page");somethingStupid()</script>Hello world');
     });
-    s.listen(8467);
+    s.listen(9999);
 
     var e = new Eo({
-      url: 'http://localhost:8467'
+      url: 'http://172.17.0.1:9999'
     });
+    e.on('error', function() {
+    })
     e.on('end', function(d) {
-      /*eslint-disable quotes */
-      d.consoleMessages[0].should.equal("hello from web page\n");
-      /*eslint-enable quotes */
+      d.consoleMessages[0].should.match(/hello from web page/);
       d.pageErrors.length.should.be.above(0);
       JSON.parse(d.pageErrors[0]).message.indexOf('somethingStupid').should.be.above(1);
       Number(d.statusCode).should.equal(200);
       d.numbers.should.have.property('TOTALTIME');
       d.numbers.should.have.property('RENDERTIME');
       d.numbers.TOTALRESOURCES.should.equal(1);
-      s.close();
-      done();
+      s.close(done);
     });
     e.start();
   });
@@ -53,7 +52,6 @@ describe('End to end', function() {
     });
     e.on('error', function(a, b) {
       // Ignore it.
-      a.should.equal('down');
       b.opts.url.should.equal(url);
     });
     e.start();

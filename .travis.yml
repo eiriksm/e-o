@@ -1,6 +1,9 @@
 language: node_js
+dist: xenial
 sudo: false
+before_install:
+  - docker run -d -p 3000:3000 --shm-size 2gb --name browserless --restart always -e "DEBUG=browserless/chrome" -e "MAX_CONCURRENT_SESSIONS=10" browserless/chrome:latest
 node_js:
-  - 6
   - 8
+  - 10
   - node
