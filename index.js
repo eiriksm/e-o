@@ -29,7 +29,10 @@ Eo.prototype.start = function() {
     if (err) {
       eo.emit('error', 'process', eo)
       eo.emit('error', 'down', eo);
-      eo.statusCode = 0;
+      eo.debug(err.message)
+      if (!eo.statusCode) {
+        eo.statusCode = 0;
+      }
     }
     if (!data) {
       data = []
