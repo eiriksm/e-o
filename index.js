@@ -25,7 +25,7 @@ Eo.prototype.start = function() {
   var time = Date.now();
   var url = this.opts.url;
   var eo = this;
-  pup({url: url, id: this.id, ignore: this.opts.ignore, auth: this.opts.auth}, function(err, data) {
+  pup({url: url, id: this.id, ignore: this.opts.ignore, auth: this.opts.auth, browserWSEndpoint: this.opts.browserWSEndpoint}, function(err, data) {
     if (err) {
       eo.emit('error', 'process', eo)
       eo.emit('error', 'down', eo);
